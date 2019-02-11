@@ -6,7 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using System.IO;
+using System.Data;
 namespace jobPortal
 {
     public partial class Js_Profile : System.Web.UI.Page
@@ -67,5 +68,46 @@ namespace jobPortal
             cmd.ExecuteNonQuery();
             Response.Redirect("Js_ViewProfile.aspx");
         }
-    }
+
+		protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		protected void Button1_Click(object sender, EventArgs e)
+		{
+			if (FileUpload1.HasFile)
+			{
+				string fileName = FileUpload1.FileName;
+				FileUpload1.PostedFile.SaveAs(Server.MapPath("~/Data/") + FileUpload1.FileName);
+			}
+
+			DataTable dt = new DataTable();
+			dt.Columns.Add("File");
+			dt.Columns.Add("Size");
+			dt.Columns.Add("Type");
+
+			foreach (string strfile in Directory.GetFiles(Server.MapPath("~/Data")))
+			{
+				FileInfo fi = new FileInfo(strfile);
+		dt.Rows.Add(fi.Name, fi.Length.ToString(),fi.Extension);
+			}
+
+			GridView1.DataSource = dt;
+			GridView1.DataBind();
+		}
+		protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+		{
+			if(e.CommandName == "Download")
+			{
+				Response.Clear();
+				Response.ContentType = "application/octet-stream";
+				Response.AppendHeader("Content-Disposition", "filename="
+					+ e.CommandArgument);
+				Response.TransmitFile(Server.MapPath("~/Data/")
+					+ e.CommandArgument);
+				Response.End();
+			}
+		}
+	}
 }
