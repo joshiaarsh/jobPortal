@@ -8,10 +8,12 @@
                     <h3 class="box-title">Applicant List</h3>
                 </div>
                 <div class="box-body">
-                    <asp:GridView ID="gdPost" runat="server" AllowPaging="true"  
+                    <asp:GridView ID="gdApplicant" runat="server" AllowPaging="true"  
                         CssClass="table table-bordered"  
                         DataKeyNames="PostId" 
-                        AutoGenerateColumns="False">
+                        AutoGenerateColumns="False"
+                        OnRowCommand="gdApplicant_RowCommand"
+                        OnSelectedIndexChanging="gdApplicant_SelectedIndexChanging">
                         <Columns>
                             <asp:BoundField DataField="PostId" HeaderStyle-CssClass="hide" ItemStyle-CssClass="hide">
                             </asp:BoundField>
@@ -21,12 +23,15 @@
                             </asp:BoundField>
                             <asp:BoundField DataField="JsName" HeaderText="ApplicantName">
                             </asp:BoundField>
-                            <%--<asp:CommandField EditText="Update" HeaderText="Update" ShowEditButton="True">
-                            </asp:CommandField>
-                            <asp:CommandField HeaderText="Delete" ShowDeleteButton="True">
-                            </asp:CommandField>--%>
+                          
                             <asp:CommandField HeaderText="View" SelectText="View" ShowSelectButton="True">
                             </asp:CommandField>
+                             <asp:TemplateField HeaderText="Selection Process">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="btnApprove" runat="server" CommandName="Approve" HeaderText="Approve" SelectText="Approve">Approve</asp:LinkButton>
+                                    <asp:LinkButton ID="btnReject" runat="server" CommandName="Reject" HeaderText="Reject" SelectText="Reject">Reject</asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>
